@@ -1,1 +1,0 @@
-Obtained from https://github.com/kakearney/subdir-pkg

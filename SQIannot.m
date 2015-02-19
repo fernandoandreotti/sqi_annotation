@@ -55,22 +55,28 @@ function SQIannot_OpeningFcn(hObject, eventdata, handles, varargin)
 
 %movegui(hObject,'center')     % move GUI to center
 % Checking .png and loading former annotations
+[fname pname] = uigetfile('*.zip','Please select compressed data file');
+fname = fullfile(pname, fname)
+folder_name = uigetdir('Please select folder containing/saving annotations');
+handles.afile = [folder_name filesep 'anotations.dat'];
+
 if isdeployed
-    p = [ctfroot filesep 'data' filesep];
-    sprintf('%s',p)
-    handles.files=subdir(p,'*.png');
-    folder_name = uigetdir('C:\','Please select folder containing/saving annotations');
-    handles.afile = [folder_name filesep 'anotations.dat'];
+    % data files
+    pathdata = [ctfroot filesep 'data' filesep]
+    delete([pathdata '*.png'])
+    unzip(fname,ctfroot)
+    
+    %     handles.files=subdir(pathdata,'*.png');
+    % annotations folder
     sprintf('%s',handles.afile)
 else
-    p = mfilename('fullpath');
-    [~,perr] = strtok(p(end:-1:1),filesep);
-    p = perr(end:-1:1);
-    handles.files = subdir([p 'data'],'*.png');
-    handles.afile = [p 'anotations.dat'];
+    pathdata = [pname 'data' filesep]
+    delete([pathdata '*.png'])
+    unzip(fname)    
 end
 clear perr
-handles.files = arrayfun(@(x) x.name,handles.files,'UniformOutput',0);
+handles.files = dir([pathdata '*.png'])
+handles.files = arrayfun(@(x) [pathdata x.name],handles.files,'UniformOutput',0);
 % for i = 1:length(handles.files)
 %     sprintf('%s',handles.files{i})
 % end
@@ -124,7 +130,8 @@ elseif handles.pointer < 1
     warndlg('First segment!')
     return
 else
-    myImage = imread(handles.files{handles.data(handles.pointer,1)});
+    loadingfig = handles.files{handles.data(handles.pointer,1)}
+    myImage = imread(loadingfig);
     axes(handles.axes1);
     imshow(myImage);
     % checks if datasets were already annotated,
@@ -224,12 +231,12 @@ switch e.Key
     case {'a' 's' 'd' 'f'}
         idx = strmatch(e.Key,{'a' 's' 'd' 'f'});
         eval(['set(handles.fecg' num2str(idx) ',''Value'',1);'])
-%     otherwise
-%         if strcmp(e.Key,'rightarrow')
-%             next_btn_Callback(hObject, e, handles);
-%         elseif strcmp(e.Key,'leftarrow')
-%             previous_btn_Callback(hObject, e, handles);
-%         end
+        %     otherwise
+        %         if strcmp(e.Key,'rightarrow')
+        %             next_btn_Callback(hObject, e, handles);
+        %         elseif strcmp(e.Key,'leftarrow')
+        %             previous_btn_Callback(hObject, e, handles);
+        %         end
 end
 if (handles.pointer == length(handles.files)) || (handles.pointer == 1)
     return
