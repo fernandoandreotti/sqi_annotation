@@ -194,7 +194,6 @@ handles.pointer = handles.pointer+1;
 % updating handles
 guidata(hObject, handles);
 % loading next
-handles.pointer
 loadfig(hObject,handles)
 
 csvwrite(handles.afile,handles.data);
