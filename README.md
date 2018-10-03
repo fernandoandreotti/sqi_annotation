@@ -1,3 +1,5 @@
+[![license](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](./LICENSE)
+
 # Matlab GUI for signal quality annotation 
 
 Small interface in Matlab used in my thesis. The objective is to annotate data acording to their SNR and presence of fetal signal. The GUI can be deployed by simpling compiling the project annotator.prj.
